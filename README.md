@@ -1,4 +1,4 @@
-# EUS CLI
+# EUS Command Line Tool
 
 This repo will contain the code behind the EUS CLI. This command line tool will be primarily used to integrate Github with deployments to our AWS server.
 
@@ -6,7 +6,7 @@ Right now, the development flow is very awkward as it involves running `scp` man
 
 It is currently under development!
 
-# USAGE
+# Usage
 
 To use this API, simply run `pip install .` from the root of this repository.
 

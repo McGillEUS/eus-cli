@@ -1,4 +1,6 @@
 import click
+from eus import utils
+
 
 @click.group()
 def cli():
@@ -7,21 +9,23 @@ def cli():
 
 
 @cli.command('add', short_help='Add files to staging')
-def add():
-    pass
+@click.argument('filename', default='.')
+def add(filename):
+    utils.add(filename)
 
 
 @cli.command('commit', short_help='Commit files locally')
-def commit():
-    pass
+@click.option('--message', '-m', type=str)
+def commit(message):
+    utils.commit(message)
 
 
-@cli.command('pull', short_help='Pull remote changes')
+@cli.command('pull', short_help='Pull remote changes (auto fetches)')
 def pull():
-    pass
+    utils.pull()
 
 
 @cli.command('push', short_help='Push files to Git+AWS')
 def push():
-    pass
+    utils.push()
 
