@@ -30,8 +30,15 @@ def pull():
     _generic_runner(command)
 
 
-def push(project, credentials):
-    """Push requires extra logic to deal with AWS
+def push(username, password,  project):
+    """Push uses the common Git utility + deploys to AWS.
+    
+    Arguments:
+        - username: The user's AWS username
+        - password: The user's AWS password
+        - project: The EUS project within AWS. It requires to be part of `/srv/www`.
     """
-    pass
+    command = f'git push'
+    _generic_runner(command)
+    # TODO: [aungur] add logic to push to AWS
 

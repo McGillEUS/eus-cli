@@ -26,6 +26,9 @@ def pull():
 
 
 @cli.command('push', short_help='Push files to Git+AWS')
-def push():
-    utils.push()
+@click.option('--username', '-u', prompt=True)
+@click.option('--password', '-pwd', prompt=True, hide_input=True)
+@click.option('--project', '-proj', prompt=True)
+def push(username, password, project):
+    utils.push(username, password, project)
 
