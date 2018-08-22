@@ -8,6 +8,6 @@ It is currently under development!
 
 # Usage
 
-To use this API, simply run `pip install .` from the root of this repository.
+To use this CLI, simply run `pip install .` from the root of this repository.
 
 Then, it can be used via the command `eus` in a similar fashion to Git.~
