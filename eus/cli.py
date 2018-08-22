@@ -15,7 +15,7 @@ def add(filename):
 
 
 @cli.command('commit', short_help='Commit files locally')
-@click.option('--message', '-m', type=str)
+@click.option('--message', '-m', prompt=True)
 def commit(message):
     utils.commit(message)
 

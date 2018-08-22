@@ -1,8 +1,12 @@
 from subprocess import run
 
-def _generic_runner(command):
-    run(command.split(' '))
-    
+def _generic_runner(command, message=""):
+    split_command = command.split(' ')
+    if message:
+        split_command.append(message)
+    run(split_command)
+
+
 """The following commands run Git commands as-is
 """
 def add(filename):
@@ -11,8 +15,8 @@ def add(filename):
 
 
 def commit(message):
-    command = f'git commit -m {message}'
-    _generic_runner(command)
+    command = 'git commit -m'
+    _generic_runner(command, message)
 
 
 def fetch():
