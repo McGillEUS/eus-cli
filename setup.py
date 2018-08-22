@@ -7,6 +7,8 @@ setup(
     include_package_data=True,
     install_requires=[
         'click',
+        'paramiko',
+        'scp'
     ],
     entry_points='''
         [console_scripts]

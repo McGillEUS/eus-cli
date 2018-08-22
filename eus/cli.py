@@ -20,17 +20,22 @@ def commit(message):
     utils.commit(message)
 
 
+@cli.command('connect', short_help='Establish a connection to AWS')
+@click.option('--username', '-u', prompt=True)
+@click.option('--password', '-p', prompt=True, hide_input=True)
+def connect(username, password):
+    utils.establish_connection(username, password)
+
+
 @cli.command('pull', short_help='Pull remote changes (auto fetches)')
 def pull():
     utils.pull()
 
 
 @cli.command('push', short_help='Push files to Git+AWS')
-@click.option('--username', '-u', prompt=True)
-@click.option('--password', '-pwd', prompt=True, hide_input=True)
 @click.option('--project', '-proj', prompt=True)
-def push(username, password, project):
-    utils.push(username, password, project)
+def push(project):
+    utils.push(project)
 
 
 @cli.command('status', short_help='Git Status')
