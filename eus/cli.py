@@ -32,3 +32,8 @@ def pull():
 def push(username, password, project):
     utils.push(username, password, project)
 
+
+@cli.command('status', short_help='Git Status')
+def status():
+    utils.status()
+

@@ -26,7 +26,7 @@ def fetch():
 
 def pull():
     fetch()
-    command = f'git pull'
+    command = 'git pull'
     _generic_runner(command)
 
 
@@ -38,7 +38,12 @@ def push(username, password,  project):
         - password: The user's AWS password
         - project: The EUS project within AWS. It requires to be part of `/srv/www`.
     """
-    command = f'git push'
+    command = 'git push'
     _generic_runner(command)
     # TODO: [aungur] add logic to push to AWS
+
+
+def status():
+    command = 'git status'
+    _generic_runner(command)
 
