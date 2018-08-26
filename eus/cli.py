@@ -20,11 +20,20 @@ def commit(message):
     utils.commit(message)
 
 
-@cli.command('connect', short_help='Establish a connection to AWS')
-@click.option('--username', '-u', prompt=True)
-@click.option('--password', '-p', prompt=True, hide_input=True)
-def connect(username, password):
-    utils.establish_connection(username, password)
+@cli.command('setup', short_help='Set up the credentials and project'
+                                 'you wish to deploy to by default.')
+@click.option('--username', '-usr', prompt=True)
+@click.option('--password', '-pwd', prompt=True, hide_input=True)
+@click.option('--project', '-proj', prompt=True)
+def setup(username, password, project):
+    utils.setup_environment(username, password, project)
+
+
+@cli.command('deploy', short_help='Deploys a folder to a project on Gastly')
+@click.option('--source', '-src', prompt=True)
+@click.option('--destination', '-dest', default=None)
+def deploy(source, destination):
+    utils.deploy(source, destination)
 
 
 @cli.command('pull', short_help='Pull remote changes (auto fetches)')
@@ -33,9 +42,9 @@ def pull():
 
 
 @cli.command('push', short_help='Push files to Git+AWS')
-@click.option('--project', '-proj', prompt=True)
-def push(project):
-    utils.push(project)
+@click.option('--deploy', '-dply', is_flag=True)
+def push(deploy):
+    utils.push(deploy)
 
 
 @cli.command('status', short_help='Git Status')

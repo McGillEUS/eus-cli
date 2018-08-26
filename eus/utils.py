@@ -1,11 +1,14 @@
 import logging
-from subprocess import run
-from paramiko import SSHClient
+import os
+from paramiko import SSHClient, AutoAddPolicy
 from scp import SCPClient
+from subprocess import run
 
 server = 'gastly.mcgilleus.ca'
+global_username = ''
+global_password = ''
+default_project = ''
 port = ''
-scp_global = None
 
 
 def _generic_runner(command, message=""):
@@ -38,33 +41,50 @@ def pull():
     _generic_runner(command)
 
 
-def push(project, folder='.'):
-    """Pushes to Git + AWS
+def push(deploy=False):
+    """Pushes to Git, and if specified AWS as well.
 
     Arguments:
-        - project: Project within `/srv/www` on Gastly
-        - folder: Folder containing files to be deployed to Gastly
+        - deploy: Whether or not to deploy to AWS
     """
     command = 'git push'
     _generic_runner(command)
-    logging.warning(f"Transferring {folder} to {server}:/srv/www/{project}")
-    scp_global.put(folder, recursive=True, remote_path=f'/srv/www/{project}')
+
+    if deploy:
+        folder = os.getcwd()
+        logging.info(f"Deploying the contents of {folder} to {global_project}")
+        deploy(folder)
 
 
-def establish_ssh_connection(username, password):
-    """Establishes the SSH connection to Gastly to allow SCP.
+def deploy(folder, project=None):
+    if not global_username and not global_password or not default_project:
+        logging.error("Make sure your username, password, and default project are set. "
+                      "Please run `eus setup` for more information")
+        return
+
+    if not project:
+        logging.warning(f"Project not specified. Defaulting to {default_project}")
+        project = default_project
+
+    ssh_client = SSHClient()
+    ssh_client.load_system_host_keys()
+    ssh_client.set_missing_host_key_policy(AutoAddPolicy())
+    ssh_client.connect(server, username=global_username, password=global_password)
+    with SCPClient(ssh_client.get_transport()) as scp_client:
+        scp_client.put(folder, f'/srv/www/{project}/')
+
+
+def setup_environment(username, password, project):
+    """Sets up global variables for dealing with AWS.
 
     Arguments:
         - username: The user's AWS username
         - password: The user's AWS password
+        - project: The default project to deploy to
     """
-    ssh_client = SSHClient()
-    ssh_client.load_system_host_keys()
-    ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh_client.connect(server, port, username, password)
-    # Set the global variable for SCP'ing if the ssh initialization was successful
-    if ssh_client:
-        scp_global = SCPClient(ssh_client.get_transport())
+    global_username = username
+    global_password = password
+    default_project = project
 
 
 def status():
