@@ -26,14 +26,17 @@ def commit(message):
 @click.option('--password', '-pwd', prompt=True, hide_input=True)
 @click.option('--project', '-proj', prompt=True)
 def setup(username, password, project):
+    # USE click.globals !!!!!
     utils.setup_environment(username, password, project)
 
 
 @cli.command('deploy', short_help='Deploys a folder to a project on Gastly')
 @click.option('--source', '-src', prompt=True)
-@click.option('--destination', '-dest', default=None)
-def deploy(source, destination):
-    utils.deploy(source, destination)
+@click.option('--destination', '-dest', prompt=True)
+@click.option('--username', '-usr', prompt=True)
+@click.option('--password', '-pwd', prompt=True, hide_input=True)
+def deploy(source, destination, username, password):
+    utils.deploy(source, destination, username, password)
 
 
 @cli.command('pull', short_help='Pull remote changes (auto fetches)')
