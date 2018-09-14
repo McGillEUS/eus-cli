@@ -1,3 +1,4 @@
+import ctypes
 import logging
 import os
 from paramiko import SSHClient, AutoAddPolicy
@@ -5,9 +6,6 @@ from scp import SCPClient
 from subprocess import run
 
 server = 'gastly.mcgilleus.ca'
-global_username = ''
-global_password = ''
-default_project = ''
 port = ''
 
 
@@ -56,22 +54,17 @@ def push(deploy=False):
         deploy(folder)
 
 
-def deploy(folder, project=None):
-    if not global_username and not global_password or not default_project:
-        logging.error("Make sure your username, password, and default project are set. "
-                      "Please run `eus setup` for more information")
+def deploy(folder, project=None, username=None, password=None):
+    if not username and not password or not project:
+        logging.error("Make sure your username, password, and project are set.")
         return
-
-    if not project:
-        logging.warning(f"Project not specified. Defaulting to {default_project}")
-        project = default_project
 
     ssh_client = SSHClient()
     ssh_client.load_system_host_keys()
     ssh_client.set_missing_host_key_policy(AutoAddPolicy())
-    ssh_client.connect(server, username=global_username, password=global_password)
+    ssh_client.connect(server, username=username, password=password)
     with SCPClient(ssh_client.get_transport()) as scp_client:
-        scp_client.put(folder, f'/srv/www/{project}/')
+        scp_client.put(folder, f'/srv/www/{project}/', recursive=True)
 
 
 def setup_environment(username, password, project):
@@ -82,9 +75,8 @@ def setup_environment(username, password, project):
         - password: The user's AWS password
         - project: The default project to deploy to
     """
-    global_username = username
-    global_password = password
-    default_project = project
+    os.environ['server_credentials'] = username+" "+ password
+    os.environ['default_project'] = project
 
 
 def status():
