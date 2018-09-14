@@ -36,7 +36,15 @@ def setup(username, password, project):
 @click.option('--username', '-usr', prompt=True)
 @click.option('--password', '-pwd', prompt=True, hide_input=True)
 def deploy(source, destination, username, password):
-    utils.deploy(source, destination, username, password)
+    utils.interact_with_aws(source, destination, username, password)
+
+
+@cli.command('get', short_help='Gets projects from Gastly')
+@click.option('--project', '-proj', prompt=True)
+@click.option('--username', '-usr', prompt=True)
+@click.option('--password', '-pwd', prompt=True, hide_input=True)
+def get(project, username, password):
+    utils.interact_with_aws(project, project, username, password, get=True)
 
 
 @cli.command('pull', short_help='Pull remote changes (auto fetches)')

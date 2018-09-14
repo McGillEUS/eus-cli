@@ -54,7 +54,8 @@ def push(deploy=False):
         deploy(folder)
 
 
-def deploy(folder, project=None, username=None, password=None):
+def interact_with_aws(folder, project=None, username=None, password=None,
+                      get=False):
     if not username and not password or not project:
         logging.error("Make sure your username, password, and project are set.")
         return
@@ -64,7 +65,10 @@ def deploy(folder, project=None, username=None, password=None):
     ssh_client.set_missing_host_key_policy(AutoAddPolicy())
     ssh_client.connect(server, username=username, password=password)
     with SCPClient(ssh_client.get_transport()) as scp_client:
-        scp_client.put(folder, f'/srv/www/{project}/', recursive=True)
+        if get:
+            scp_client.get(f'/srv/www/{project}/', project, recursive=True)
+        else:
+            scp_client.put(folder, f'/srv/www/{project}/', recursive=True)
 
 
 def setup_environment(username, password, project):
